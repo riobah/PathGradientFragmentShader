@@ -39,7 +39,7 @@ The triangle's 2D position components are jointly represented with a `vector_flo
 ``` objective-c
 typedef struct
 {
-    //  Positions in pixel space (i.e. a value of 100 indicates 100 pixels from the origin/center)
+    // Positions in pixel space (i.e. a value of 100 indicates 100 pixels from the origin/center)
     vector_float2 position;
 
     // Floating point RGBA colors
@@ -206,10 +206,10 @@ The `default.metallib` file is a library of Metal shading language functions tha
 id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
 
 // Load the vertex function from the library
-id <MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
 
 // Load the fragment function from the library
-id <MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
+id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
 ```
 
 These `MTLFunction` objects are used to create a `MTLRenderStatePipeline` object that represents the graphics-rendering pipeline. Calling the  `newRenderPipelineStateWithDescriptor:error:` method of a `MTLDevice` object begins the back-end compilation process that links the `vertexShader` and `fragmentShader` functions, resulting in a fully compiled pipeline.

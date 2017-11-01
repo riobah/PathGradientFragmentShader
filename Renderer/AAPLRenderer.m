@@ -2,28 +2,29 @@
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-Implementation of renderer class which perfoms Metal setup and per frame rendering
+Implementation of our platform independent renderer class, which perfoms Metal setup and per frame rendering
 */
+
 @import simd;
 @import MetalKit;
 
 #import "AAPLRenderer.h"
 
 // Header shared between C code here, which executes Metal API commands, and .metal files, which
-//   uses these types as inpute to the shaders
+//   uses these types as input to the shaders
 #import "AAPLShaderTypes.h"
 
 // Main class performing the rendering
 @implementation AAPLRenderer
 {
     // The device (aka GPU) we're using to render
-    id <MTLDevice> _device;
+    id<MTLDevice> _device;
 
     // Our render pipeline composed of our vertex and fragment shaders in the .metal shader file
     id<MTLRenderPipelineState> _pipelineState;
 
     // The command Queue from which we'll obtain command buffers
-    id <MTLCommandQueue> _commandQueue;
+    id<MTLCommandQueue> _commandQueue;
 
     // The current size of our view so we can use this in our render pipeline
     vector_uint2 _viewportSize;
@@ -46,10 +47,10 @@ Implementation of renderer class which perfoms Metal setup and per frame renderi
         id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
 
         // Load the vertex function from the library
-        id <MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
+        id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
 
         // Load the fragment function from the library
-        id <MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
+        id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
 
         // Set up a descriptor for creating a pipeline state object
         MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
@@ -98,7 +99,7 @@ Implementation of renderer class which perfoms Metal setup and per frame renderi
     };
 
     // Create a new command buffer for each renderpass to the current drawable
-    id <MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
+    id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     commandBuffer.label = @"MyCommand";
 
     // Obtain a renderPassDescriptor generated from the view's drawable textures
@@ -107,7 +108,7 @@ Implementation of renderer class which perfoms Metal setup and per frame renderi
     if(renderPassDescriptor != nil)
     {
         // Create a render command encoder so we can render into something
-        id <MTLRenderCommandEncoder> renderEncoder =
+        id<MTLRenderCommandEncoder> renderEncoder =
         [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
         renderEncoder.label = @"MyRenderEncoder";
 
@@ -116,7 +117,7 @@ Implementation of renderer class which perfoms Metal setup and per frame renderi
 
         [renderEncoder setRenderPipelineState:_pipelineState];
 
-        // We call -[MTLRenderCommandEncoder setVertexBytes:lenght:atIndex:] tp send data from our
+        // We call -[MTLRenderCommandEncoder setVertexBytes:lenght:atIndex:] to send data from our
         //   Application ObjC code here to our Metal 'vertexShader' function
         // This call has 3 arguments
         //   1) A pointer to the memory we want to pass to our shader

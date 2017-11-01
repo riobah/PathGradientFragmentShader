@@ -46,7 +46,7 @@ vertexShader(uint vertexID [[vertex_id]],
     // Dereference viewportSizePointer and cast to float so we can do floating-point division
     vector_float2 viewportSize = vector_float2(*viewportSizePointer);
 
-    // The output position of every vertex shader is in clip space (also known as normalized device
+    // The output position of every vertex shader is in clip-space (also known as normalized device
     //   coordinate space, or NDC).   A value of (-1.0, -1.0) in clip-space represents the
     //   lower-left corner of the viewport whereas (1.0, 1.0) represents the upper-right corner of
     //   the viewport.
@@ -57,8 +57,8 @@ vertexShader(uint vertexID [[vertex_id]],
     out.clipSpacePosition.xy = pixelSpacePosition / (viewportSize / 2.0);
 
     // Pass our input color straight to our output color.  This value will be interpolated
-    //   with the other color values in the vertices that make up the triangle to produce
-    //   the color value for each fragment in our fragmentShader
+    //   with the other color values of the vertices that make up the triangle to produce
+    //   the color value for each fragment in our fragment shader
     out.color = vertices[vertexID].color;
 
     return out;

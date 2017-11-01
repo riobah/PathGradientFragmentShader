@@ -1,9 +1,8 @@
-
 /*
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-Implementation of our macOS view controller
+Implementation of our cross-platform view controller
 */
 
 #import "AAPLViewController.h"
@@ -26,11 +25,8 @@ Implementation of our macOS view controller
 
     if(!_view.device)
     {
-        // If we didn't get a device, Metal isn't suppoted here
         NSLog(@"Metal is not supported on this device");
-
-        // Just create a blank view.
-        self.view = [[NSView alloc] initWithFrame:self.view.frame];
+        return;
     }
 
     _renderer = [[AAPLRenderer alloc] initWithMetalKitView:_view];
