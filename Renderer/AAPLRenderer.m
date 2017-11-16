@@ -2,7 +2,7 @@
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-Implementation of our platform independent renderer class, which perfoms Metal setup and per frame rendering
+Implementation of our platform independent renderer class, which performs Metal setup and per frame rendering
 */
 
 @import simd;
@@ -11,7 +11,7 @@ Implementation of our platform independent renderer class, which perfoms Metal s
 #import "AAPLRenderer.h"
 
 // Header shared between C code here, which executes Metal API commands, and .metal files, which
-//   uses these types as input to the shaders
+//   uses these types as inputs to the shaders
 #import "AAPLShaderTypes.h"
 
 // Main class performing the rendering
@@ -30,7 +30,7 @@ Implementation of our platform independent renderer class, which perfoms Metal s
     vector_uint2 _viewportSize;
 }
 
-/// Initialize with the MetalKit view from which we'll obtain our metal device
+/// Initialize with the MetalKit view from which we'll obtain our Metal device
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView
 {
     self = [super init];
@@ -40,10 +40,7 @@ Implementation of our platform independent renderer class, which perfoms Metal s
 
         _device = mtkView.device;
 
-        // Indicate we would like to use the RGBAPisle format.
-        mtkView.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
-
-        // Load all the shader files with a metal file extension in the project
+        // Load all the shader files with a .metal file extension in the project
         id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
 
         // Load the vertex function from the library
@@ -52,7 +49,7 @@ Implementation of our platform independent renderer class, which perfoms Metal s
         // Load the fragment function from the library
         id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
 
-        // Set up a descriptor for creating a pipeline state object
+        // Configure a pipeline descriptor that is used to create a pipeline state
         MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
         pipelineStateDescriptor.label = @"Simple Pipeline";
         pipelineStateDescriptor.vertexFunction = vertexFunction;
@@ -92,13 +89,13 @@ Implementation of our platform independent renderer class, which perfoms Metal s
 {
     static const AAPLVertex triangleVertices[] =
     {
-        // 2D Positions,    RGBA colors
+        // 2D positions,    RGBA colors
         { {  250,  -250 }, { 1, 0, 0, 1 } },
         { { -250,  -250 }, { 0, 1, 0, 1 } },
         { {    0,   250 }, { 0, 0, 1, 1 } },
     };
 
-    // Create a new command buffer for each renderpass to the current drawable
+    // Create a new command buffer for each render pass to the current drawable
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     commandBuffer.label = @"MyCommand";
 
@@ -117,7 +114,7 @@ Implementation of our platform independent renderer class, which perfoms Metal s
 
         [renderEncoder setRenderPipelineState:_pipelineState];
 
-        // We call -[MTLRenderCommandEncoder setVertexBytes:lenght:atIndex:] to send data from our
+        // We call -[MTLRenderCommandEncoder setVertexBytes:length:atIndex:] to send data from our
         //   Application ObjC code here to our Metal 'vertexShader' function
         // This call has 3 arguments
         //   1) A pointer to the memory we want to pass to our shader
@@ -125,19 +122,19 @@ Implementation of our platform independent renderer class, which perfoms Metal s
         //   3) An integer index which corresponds to the index of the buffer attribute qualifier
         //      of the argument in our 'vertexShader' function
 
-        // Here we're sending a pointer to our 'triangleVertices' array (and indicating its size).
-        //   The AAPLVertexInputIndexVertices enum value corresponds to the 'vertexArray' argument
-        //   in our 'vertexShader' function because its buffer attribute qualifier also uses
-        //   AAPLVertexInputIndexVertices for its index
+        // You send a pointer to the `triangleVertices` array also and indicate its size
+        // The `AAPLVertexInputIndexVertices` enum value corresponds to the `vertexArray`
+        // argument in the `vertexShader` function because its buffer attribute also uses
+        // the `AAPLVertexInputIndexVertices` enum value for its index
         [renderEncoder setVertexBytes:triangleVertices
                                length:sizeof(triangleVertices)
                               atIndex:AAPLVertexInputIndexVertices];
 
-        // Here we're sending a pointer to '_viewportSize' and also indicate its size so the whole
-        //   think is passed into the shader.  The AAPLVertexInputIndexViewportSize enum value
-        ///  corresponds to the 'viewportSizePointer' argument in our 'vertexShader' function
-        //   because its buffer attribute qualifier also uses AAPLVertexInputIndexViewportSize
-        //   for its index
+        // You send a pointer to `_viewportSize` and also indicate its size
+        // The `AAPLVertexInputIndexViewportSize` enum value corresponds to the
+        // `viewportSizePointer` argument in the `vertexShader` function because its
+        //  buffer attribute also uses the `AAPLVertexInputIndexViewportSize` enum value
+        //  for its index
         [renderEncoder setVertexBytes:&_viewportSize
                                length:sizeof(_viewportSize)
                               atIndex:AAPLVertexInputIndexViewportSize];

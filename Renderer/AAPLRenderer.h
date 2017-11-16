@@ -2,7 +2,7 @@
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-Header for our platform independent renderer class, which perfoms Metal setup and per frame rendering
+Header for our platform independent renderer class, which performs Metal setup and per frame rendering
 */
 
 @import MetalKit;

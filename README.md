@@ -8,6 +8,10 @@ In the [Devices and Commands](https://developer.apple.com/documentation/metal/de
 
 In this sample, you'll learn how to render basic geometry in Metal. In particular, you'll learn how to work with vertex data and SIMD types, configure the graphics rendering pipeline, write GPU functions, and issue draw calls.
 
+## Getting Started
+
+The Xcode project contains schemes for running the sample on macOS, iOS, or tvOS. Metal is not supported in the iOS or tvOS Simulator, so the iOS and tvOS schemes require a physical device to run the sample. The default scheme is macOS, which runs the sample as is on your Mac.
+
 ## The Metal Graphics Rendering Pipeline
 
 The Metal graphics rendering pipeline is made up of multiple graphics processing unit (GPU) stages, some programmable and some fixed, that execute a draw command. Metal defines the inputs, processes, and outputs of the pipeline as a set of rendering commands applied to certain data. In its most basic form, the pipeline receives vertices as input and renders pixels as output. This sample focuses on the three main stages of the pipeline: the vertex function, the rasterization stage, and the fragment function. The vertex function and fragment function are programmable stages. The rasterization stage is fixed.
@@ -39,10 +43,11 @@ The triangle's 2D position components are jointly represented with a `vector_flo
 ``` objective-c
 typedef struct
 {
-    // Positions in pixel space (i.e. a value of 100 indicates 100 pixels from the origin/center)
+    // Positions in pixel space
+    // (e.g. a value of 100 indicates 100 pixels from the center)
     vector_float2 position;
 
-    // Floating point RGBA colors
+    // Floating-point RGBA colors
     vector_float4 color;
 } AAPLVertex;
 ```
@@ -52,7 +57,7 @@ The triangle's three vertices are directly hard coded into an array of `AAPLVert
 ``` objective-c
 static const AAPLVertex triangleVertices[] =
 {
-    // 2D Positions,    RGBA colors
+    // 2D positions,    RGBA colors
     { {  250,  -250 }, { 1, 0, 0, 1 } },
     { { -250,  -250 }, { 0, 1, 0, 1 } },
     { {    0,   250 }, { 0, 0, 1, 1 } },
@@ -107,13 +112,13 @@ The `RasterizerData` structure defines the return value of the vertex function.
 ``` metal
 typedef struct
 {
-    // The [[position]] attribute qualifier of this member indicates this value is the clip space
-    //   position of the vertex when this structure is returned from the vertex function
+    // The [[position]] attribute of this member indicates that this value is the clip space
+    // position of the vertex when this structure is returned from the vertex function
     float4 clipSpacePosition [[position]];
 
-    // Since this member does not have a special attribute qualifier, the rasterizer will
-    //   interpolate its value with values of other vertices making up the triangle and
-    //   pass that interpolated value to the fragment shader for each fragment in that triangle
+    // Since this member does not have a special attribute, the rasterizer interpolates
+    // its value with the values of the other triangle vertices and then passes
+    // the interpolated value to the fragment shader for each fragment in the triangle
     float4 color;
 
 } RasterizerData;
@@ -202,7 +207,7 @@ Each GPU family has a different instruction set. As a result, Metal shading lang
 The `default.metallib` file is a library of Metal shading language functions that's represented by a `MTLLibrary` object retrieved at runtime by calling the `newDefaultLibrary` method. From this library, specific functions represented by `MTLFunction` objects can be retrieved.
 
 ``` objective-c
-// Load all the shader files with a metal file extension in the project
+// Load all the shader files with a .metal file extension in the project
 id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
 
 // Load the vertex function from the library
@@ -212,9 +217,9 @@ id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexSha
 id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
 ```
 
-These `MTLFunction` objects are used to create a `MTLRenderStatePipeline` object that represents the graphics-rendering pipeline. Calling the  `newRenderPipelineStateWithDescriptor:error:` method of a `MTLDevice` object begins the back-end compilation process that links the `vertexShader` and `fragmentShader` functions, resulting in a fully compiled pipeline.
+These `MTLFunction` objects are used to create a `MTLRenderPipelineState` object that represents the graphics-rendering pipeline. Calling the  `newRenderPipelineStateWithDescriptor:error:` method of a `MTLDevice` object begins the back-end compilation process that links the `vertexShader` and `fragmentShader` functions, resulting in a fully compiled pipeline.
 
-A `MTLRenderStatePipeline` object contains additional pipeline settings that are configured by a `MTLRenderPipelineDescriptor` object. Besides the vertex and fragment functions, this sample also configures the `pixelFormat` value of the first entry in the `colorAttachments` array. This sample only renders to a single target, the view's drawable (`colorAttachments[0]`), whose pixel format is configured by the view itself (`colorPixelFormat`). A view's pixel format defines the memory layout of each of its pixels; Metal must be able to reference this layout when creating the pipeline so that it can properly render the color values produced by the fragment function.
+A `MTLRenderPipelineState` object contains additional pipeline settings that are configured by a `MTLRenderPipelineDescriptor` object. Besides the vertex and fragment functions, this sample also configures the `pixelFormat` value of the first entry in the `colorAttachments` array. This sample only renders to a single target, the view's drawable (`colorAttachments[0]`), whose pixel format is configured by the view itself (`colorPixelFormat`). A view's pixel format defines the memory layout of each of its pixels; Metal must be able to reference this layout when creating the pipeline so that it can properly render the color values produced by the fragment function.
 
 ``` objective-c
 MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
@@ -244,19 +249,19 @@ This sample sends the following vertex data to a vertex function:
 * The `_viewportSize` pointer is sent to `viewportSizePointer` parameter, using the `AAPLVertexInputIndexViewportSize` index value
 
 ``` objective-c
-// Here we're sending a pointer to our 'triangleVertices' array (and indicating its size).
-//   The AAPLVertexInputIndexVertices enum value corresponds to the 'vertexArray' argument
-//   in our 'vertexShader' function because its buffer attribute qualifier also uses
-//   AAPLVertexInputIndexVertices for its index
+// You send a pointer to the `triangleVertices` array also and indicate its size
+// The `AAPLVertexInputIndexVertices` enum value corresponds to the `vertexArray`
+// argument in the `vertexShader` function because its buffer attribute also uses
+// the `AAPLVertexInputIndexVertices` enum value for its index
 [renderEncoder setVertexBytes:triangleVertices
                        length:sizeof(triangleVertices)
                       atIndex:AAPLVertexInputIndexVertices];
 
-// Here we're sending a pointer to '_viewportSize' and also indicate its size so the whole
-//   think is passed into the shader.  The AAPLVertexInputIndexViewportSize enum value
-///  corresponds to the 'viewportSizePointer' argument in our 'vertexShader' function
-//   because its buffer attribute qualifier also uses AAPLVertexInputIndexViewportSize
-//   for its index
+// You send a pointer to `_viewportSize` and also indicate its size
+// The `AAPLVertexInputIndexViewportSize` enum value corresponds to the
+// `viewportSizePointer` argument in the `vertexShader` function because its
+//  buffer attribute also uses the `AAPLVertexInputIndexViewportSize` enum value
+//  for its index
 [renderEncoder setVertexBytes:&_viewportSize
                        length:sizeof(_viewportSize)
                       atIndex:AAPLVertexInputIndexViewportSize];

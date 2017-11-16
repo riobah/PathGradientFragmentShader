@@ -31,7 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
+		343CA39645846424C93B60FD /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
 		3A05CBDE1F731AB800CA21B1 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A1F1B401F0338C6001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A1F1B411F0338CF001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../AppleTVOS.platform/Developer/SDKs/AppleTVOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
@@ -55,7 +55,7 @@
 		3ACD21331EAE60D2000D1DED /* AAPLAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLAppDelegate.h; sourceTree = "<group>"; };
 		3ACD21341EAE60D2000D1DED /* AAPLAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLAppDelegate.m; sourceTree = "<group>"; };
 		3ED283CC1EC2C6D200A23F58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		FABB2856446ABC34B0CADF47 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
+		98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,10 +86,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		38DEAEB2B84C59003E6CA7C6 /* Configuration */ = {
+		1339EDD713DDEF179B50329B /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */,
+				98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */,
 			);
 			name = Configuration;
 			sourceTree = "<group>";
@@ -130,8 +130,8 @@
 				3A3532911E99974500C194AD /* Application */,
 				3AE289861EEA0A9100DF4C9A /* Frameworks */,
 				3A3532901E99974500C194AD /* Products */,
-				38DEAEB2B84C59003E6CA7C6 /* Configuration */,
-				F88F7FAD8231535038C2192C /* LICENSE */,
+				1339EDD713DDEF179B50329B /* Configuration */,
+				F2433FDB3ACBA20B56478A7F /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -164,8 +164,8 @@
 				3A35329B1E99974500C194AD /* AAPLViewController.h */,
 				3A35329C1E99974500C194AD /* AAPLViewController.m */,
 				3A3532931E99974500C194AD /* main.m */,
-				3A1F1B371F0336F4001622B3 /* tvOS */,
 				3A1F1B361F0336DB001622B3 /* macOS */,
+				3A1F1B371F0336F4001622B3 /* tvOS */,
 				3A1F1B351F0336A8001622B3 /* iOS */,
 			);
 			path = Application;
@@ -181,10 +181,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F88F7FAD8231535038C2192C /* LICENSE */ = {
+		F2433FDB3ACBA20B56478A7F /* LICENSE */ = {
 			isa = PBXGroup;
 			children = (
-				FABB2856446ABC34B0CADF47 /* LICENSE.txt */,
+				343CA39645846424C93B60FD /* LICENSE.txt */,
 			);
 			name = LICENSE;
 			path = LICENSE;
@@ -391,7 +391,7 @@
 /* Begin XCBuildConfiguration section */
 		3A3532E01E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -443,7 +443,7 @@
 		};
 		3A3532E11E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -488,7 +488,7 @@
 		};
 		3A3532E31E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				DEVELOPMENT_TEAM = "";
@@ -513,7 +513,7 @@
 		};
 		3A3532E41E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				DEVELOPMENT_TEAM = "";
@@ -536,7 +536,7 @@
 		};
 		3A3532E61E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				DEVELOPMENT_TEAM = "";
@@ -561,7 +561,7 @@
 		};
 		3A3532E71E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				DEVELOPMENT_TEAM = "";
@@ -584,7 +584,7 @@
 		};
 		3A3532E91E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -605,7 +605,7 @@
 		};
 		3A3532EA1E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1BACD979D8FE312D9C188919 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;

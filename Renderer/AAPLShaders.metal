@@ -13,21 +13,21 @@ using namespace metal;
 // Include header shared between this Metal shader code and C code executing Metal API commands
 #import "AAPLShaderTypes.h"
 
-// Vertex shader outputs and fragmentShader inputs.
+// Vertex shader outputs and fragment shader inputs
 typedef struct
 {
-    // The [[position]] attribute qualifier of this member indicates this value is the clip space
-    //   position of the vertex when this structure is returned from the vertex function
+    // The [[position]] attribute of this member indicates that this value is the clip space
+    // position of the vertex when this structure is returned from the vertex function
     float4 clipSpacePosition [[position]];
 
-    // Since this member does not have a special attribute qualifier, the rasterizer will
-    //   interpolate its value with values of other vertices making up the triangle and
-    //   pass that interpolated value to the fragment shader for each fragment in that triangle
+    // Since this member does not have a special attribute, the rasterizer interpolates
+    // its value with the values of the other triangle vertices and then passes
+    // the interpolated value to the fragment shader for each fragment in the triangle
     float4 color;
 
 } RasterizerData;
 
-// Vertex Function
+// Vertex function
 vertex RasterizerData
 vertexShader(uint vertexID [[vertex_id]],
              constant AAPLVertex *vertices [[buffer(AAPLVertexInputIndexVertices)]],
@@ -39,7 +39,7 @@ vertexShader(uint vertexID [[vertex_id]],
     out.clipSpacePosition = vector_float4(0.0, 0.0, 0.0, 1.0);
 
     // Index into our array of positions to get the current vertex
-    //   Our positons are specified in pixel dimensions (i.e. a value of 100 is 100 pixels from
+    //   Our positions are specified in pixel dimensions (i.e. a value of 100 is 100 pixels from
     //   the origin)
     float2 pixelSpacePosition = vertices[vertexID].position.xy;
 
