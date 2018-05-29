@@ -201,7 +201,6 @@ Metal shading language code is compiled in two stages:
 1. Front-end compilation happens in Xcode at build time. `.metal` files are compiled from high-level source code into intermediate representation (IR) files.
 2. Back-end compilation happens in a physical device at runtime. IR files are then compiled into low-level machine code.
 
-
 Each GPU family has a different instruction set. As a result, Metal shading language code can only be fully compiled into native GPU code at runtime, by the physical device itself. Front-end compilation reduces some of this compilation overhead by storing IR in a `default.metallib` file that's packaged inside the sample's `.app` bundle.
 
 The `default.metallib` file is a library of Metal shading language functions that's represented by a `MTLLibrary` object retrieved at runtime by calling the `newDefaultLibrary` method. From this library, specific functions represented by `MTLFunction` objects can be retrieved.
@@ -286,4 +285,4 @@ This call is the last call needed to encode the rendering commands for a single 
 
 In this sample, you learned how to render basic geometry in Metal.
 
-In the [Basic Buffers](https://developer.apple.com/documentation/metal/fundamental_lessons/basic_buffers) sample, you'll learn how to use a vertex buffer to improve your rendering efficiency.
+In the [Basic Buffers](https://developer.apple.com/documentation/metal/basic_buffers) sample, you'll learn how to use a vertex buffer to improve your rendering efficiency.

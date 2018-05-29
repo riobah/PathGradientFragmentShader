@@ -31,7 +31,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		343CA39645846424C93B60FD /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
 		3A05CBDE1F731AB800CA21B1 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A1F1B401F0338C6001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A1F1B411F0338CF001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../AppleTVOS.platform/Developer/SDKs/AppleTVOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
@@ -55,7 +54,8 @@
 		3ACD21331EAE60D2000D1DED /* AAPLAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLAppDelegate.h; sourceTree = "<group>"; };
 		3ACD21341EAE60D2000D1DED /* AAPLAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLAppDelegate.m; sourceTree = "<group>"; };
 		3ED283CC1EC2C6D200A23F58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
+		47D4DAE047D4E21000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
+		4D41D9504D41DAF000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,14 +86,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1339EDD713DDEF179B50329B /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */,
-			);
-			name = Configuration;
-			sourceTree = "<group>";
-		};
 		3A1F1B351F0336A8001622B3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -130,8 +122,8 @@
 				3A3532911E99974500C194AD /* Application */,
 				3AE289861EEA0A9100DF4C9A /* Frameworks */,
 				3A3532901E99974500C194AD /* Products */,
-				1339EDD713DDEF179B50329B /* Configuration */,
-				F2433FDB3ACBA20B56478A7F /* LICENSE */,
+				47D4E27047D4DE0000000001 /* Configuration */,
+				4D410D904D410D6000000001 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,10 +173,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F2433FDB3ACBA20B56478A7F /* LICENSE */ = {
+		47D4E27047D4DE0000000001 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				343CA39645846424C93B60FD /* LICENSE.txt */,
+				47D4DAE047D4E21000000001 /* SampleCode.xcconfig */,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
+		4D410D904D410D6000000001 /* LICENSE */ = {
+			isa = PBXGroup;
+			children = (
+				4D41D9504D41DAF000000001 /* LICENSE.txt */,
 			);
 			name = LICENSE;
 			path = LICENSE;
@@ -250,7 +250,7 @@
 		3A35327F1E99974500C194AD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Apple;
 				TargetAttributes = {
 					3A35328E1E99974500C194AD = {
@@ -391,7 +391,7 @@
 /* Begin XCBuildConfiguration section */
 		3A3532E01E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -404,6 +404,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -411,6 +412,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -443,7 +445,7 @@
 		};
 		3A3532E11E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -456,6 +458,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -463,6 +466,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -488,9 +492,9 @@
 		};
 		3A3532E31E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -506,16 +510,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos.internal;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		3A3532E41E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -528,7 +532,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = iphoneos.internal;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -536,9 +540,9 @@
 		};
 		3A3532E61E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -553,7 +557,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = appletvos.internal;
+				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.2;
 			};
@@ -561,9 +565,9 @@
 		};
 		3A3532E71E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -575,7 +579,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SDKROOT = appletvos.internal;
+				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 10.2;
 				VALIDATE_PRODUCT = YES;
@@ -584,9 +588,10 @@
 		};
 		3A3532E91E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -605,9 +610,10 @@
 		};
 		3A3532EA1E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 98A53EFB3A5DF1BBA8D07F7C /* SampleCode.xcconfig */;
+			baseConfigurationReference = 47D4DAE047D4E21000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				GCC_PREPROCESSOR_DEFINITIONS = TARGET_MACOS;
