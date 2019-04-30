@@ -1,58 +1,79 @@
-# Hello Triangle
+# Using a Render Pipeline to Render Primitives
 
-Demonstrates how to render a simple 2D triangle.
+Render a simple 2D triangle.
 
 ## Overview
 
-In the [Devices and Commands](https://developer.apple.com/documentation/metal/devices_and_commands) sample, you learned how to write an app that uses Metal and issues basic rendering commands to the GPU.
-
-In this sample, you'll learn how to render basic geometry in Metal. In particular, you'll learn how to work with vertex data and SIMD types, configure the graphics rendering pipeline, write GPU functions, and issue draw calls.
-
-## Getting Started
-
-The Xcode project contains schemes for running the sample on macOS, iOS, or tvOS. Metal is not supported in the iOS or tvOS Simulator, so the iOS and tvOS schemes require a physical device to run the sample. The default scheme is macOS, which runs the sample as is on your Mac.
-
-## The Metal Graphics Rendering Pipeline
-
-The Metal graphics rendering pipeline is made up of multiple graphics processing unit (GPU) stages, some programmable and some fixed, that execute a draw command. Metal defines the inputs, processes, and outputs of the pipeline as a set of rendering commands applied to certain data. In its most basic form, the pipeline receives vertices as input and renders pixels as output. This sample focuses on the three main stages of the pipeline: the vertex function, the rasterization stage, and the fragment function. The vertex function and fragment function are programmable stages. The rasterization stage is fixed.
-
-![Main Stages of the Metal Graphics Rendering Pipeline](Documentation/SimplePipeline.png)
-
-A `MTLRenderPipelineState` object represents a graphics-rendering pipeline. Many stages of this pipeline can be configured using a `MTLRenderPipelineDescriptor` object, which defines a large portion of how Metal processes input vertices into rendered output pixels.
-
-## Vertex Data
-
-A vertex is simply a point in space where two or more lines meet. Typically, vertices are expressed as a collection of Cartesian coordinates that define specific geometry, along with optional data associated with each coordinate.
-
-This sample renders a simple 2D triangle made up of three vertices, with each vertex containing the position and color of a triangle corner.
+In Drawing to the Screen Using Metal, you learned how to set up an `MTKView` object and to change the view's contents using a render pass.
+That sample simply erased the view's contents to a background color.
+This sample shows you how to configure a render pipeline and use it as part of the render pass to draw a simple 2D colored triangle into the view.
+The sample supplies a position and color for each vertex, and the render pipeline uses that data to render the triangle, interpolating color values between the colors specified for the triangle's vertices.
 
 ![Simple 2D Triangle Vertices](Documentation/2DTriangleVertices.png)
 
-Position is a required vertex attribute, whereas color is optional. For this sample, the pipeline uses both vertex attributes to render a colored triangle onto a specific region of a drawable.
+- Note: The Xcode project contains schemes for running the sample on macOS, iOS, and tvOS devices.
+Metal isn't supported in iOS or tvOS Simulator, so the iOS and tvOS schemes require a physical device to run the sample.
+The default scheme is macOS.
 
-## Use SIMD Data Types
+## Understand the Metal Render Pipeline
 
-Vertex data is usually loaded from a file that contains 3D model data exported from specialized modeling software. Detailed models may contain thousands of vertices with many attributes, but ultimately they all end up in some form of array that is specially packaged, encoded, and sent to the GPU.
+A *render pipeline* processes drawing commands and writes data into a render pass’s targets.
+ A render pipeline has many stages, some programmed using shaders and others with fixed or configurable behavior.
+This sample focuses on the three main stages of the pipeline: the vertex stage, the rasterization stage, and the fragment stage.
+The vertex stage and fragment stage are programmable, so you write functions for them in Metal Shading Language (MSL).
+The rasterization stage has fixed behavior.
 
-The sample's triangle defines a 2D position (x, y) and RGBA color (red, green, blue, alpha) for each of its three vertices. This relatively small amount of data is directly hard coded into an array of structures, where each element of the array represents a single vertex. The structure used as the data type for the array elements defines the memory layout of each vertex.
+**Figure 1** Main stages of the Metal graphics render pipeline
+![Main Stages of the Metal Graphics Render Pipeline](Documentation/SimplePipeline.png)
 
-Vertex data, and 3D graphics data in general, is usually defined with vector data types, simplifying common graphics algorithms and GPU processing. This sample uses optimized vector data types provided by the SIMD library to represent the triangle's vertices. The SIMD library is independent from Metal and MetalKit, but is highly recommended for developing Metal apps, mainly for its convenience and performance benefits.
+Rendering starts with a drawing command, which includes a vertex count and what kind of primitive to render. For example, here's the drawing command from this sample:
 
-The triangle's 2D position components are jointly represented with a `vector_float2` SIMD data type, which holds two 32-bit floating-point values. Similarly, the triangle's RGBA color components are jointly represented with a `vector_float4` SIMD data type, which holds four 32-bit floating-point values. Both of these attributes are then combined into a single `AAPLVertex` structure.
+``` objective-c
+// Draw the triangle.
+[renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle
+                  vertexStart:0
+                  vertexCount:3];
+```
+
+The vertex stage provides data for each vertex. When enough vertices have been processed, the render pipeline rasterizes the primitive, determining which pixels in the render targets lie within the boundaries of the primitive. The fragment stage determines the values to write into the render targets for those pixels.
+
+In the rest of this sample, you'll see how to write the vertex and fragment functions, how to create the render pipeline state object, and finally, how to encode a draw command that uses this pipeline.
+
+## Decide How your Custom Render Pipeline Will Process Data
+
+A vertex function generates data for a single vertex, and a fragment function generates data for a single fragment, but you decide how they work.
+You configure the stages of the pipeline with a goal in mind, meaning that you know what you want the pipeline to generate and how it generates those results.
+
+Decide what data passes through your render pipeline. There are typically three places where you do this:
+
+- The inputs to the pipeline, which are provided by your app and passed to the vertex stage.
+- The outputs of the vertex stage, which is passed to the rasterization stage.
+- The inputs to the fragment stage, which are provided by your app or generated by the rasterization stage.
+
+## Declare the Format for the Vertex Stage's Input Data
+
+In this sample, the input data for the pipeline is the position of a vertex and its color. To demonstrate the kind of transformation you typically perform in a vertex function, the sample defines the input coordinates in a custom coordinate system, measured in pixels from the center of the view. The vertex function transforms these custom coordinates into a Metal coordinate system.
+
+Declare an `AAPLVertex` structure, using SIMD vector types to hold the position and color data.
+To share a single definition for how the structure is laid out in memory, declare the structure in a common header and import it in both the Metal shader and the app.
 
 ``` objective-c
 typedef struct
 {
-    // Positions in pixel space
-    // (e.g. a value of 100 indicates 100 pixels from the center)
     vector_float2 position;
-
-    // Floating-point RGBA colors
     vector_float4 color;
 } AAPLVertex;
 ```
 
-The triangle's three vertices are directly hard coded into an array of `AAPLVertex` elements, thus defining the exact attribute values of each vertex.
+SIMD types are commonplace in Metal Shading Language.
+For consistency, include the `simd` library in your app and use SIMD types to declare data you provide to shaders.
+SIMD types contain multiple values of a particular data type, sometimes called *channels*. Declaring the position as a `vector_float2` means it contains two 32-bit float values (which will hold the x and y coordinates.)
+Colors are stored using a `vector_float4`, so they have four channels – red, green, blue, and alpha.
+
+
+## Declare the Vertex Data
+
+Using the new data structure, specify the data for the triangle using an array:
 
 ``` objective-c
 static const AAPLVertex triangleVertices[] =
@@ -64,25 +85,43 @@ static const AAPLVertex triangleVertices[] =
 };
 ```
 
-## Set a Viewport
 
-A viewport specifies the area of a drawable that Metal renders content to. A viewport is a 3D area with an x and y offset, a width and height, and near and far planes (although these last two aren't needed here because this sample renders 2D content only).
+## Declare the Format of the Rasterization Data
 
-Assigning a custom viewport for the pipeline requires encoding a `MTLViewport` structure into a render command encoder by calling the `setViewport:` method. If a viewport isn't specified, Metal sets a default viewport with the same size as the drawable used to create the render command encoder.
+The vertex stage generates data to pass to the rasterizer.
+It needs to provide a transformed position and a color.
+Declare a `RasterizerData` structure containing a position and a color value, as shown below.
 
-## Write a Vertex Function
+Define the output position (described in detail below in "Implement the Vertex Function") as a `vector_float4`.
+You need to tell Metal which field in the rasterization data provides position data, because Metal doesn't enforce any particular naming convention for fields in your struct.
+Annotate the `position` field with the `[[position]]` attribute qualifier to declare that this field holds the output position, as shown below.
 
-The main task of a vertex function (also known as a *vertex shader*) is to process incoming vertex data and map each vertex to a position in the viewport. This way, subsequent stages in the pipeline can refer to this viewport position and render pixels to an exact location in the drawable. The vertex function accomplishes this task by translating arbitrary vertex coordinates into normalized device coordinates, also known as *clip-space coordinates*.
+Declare the color as it was in the input data structure.
 
-Clip space is a 2D coordinate system that maps the viewport area to a [-1.0, 1.0] range along both the x and y axes. The viewport's lower-left corner is mapped to (-1.0, -1.0), the upper-right corner is mapped to (1.0, 1.0), and the center is mapped to (0.0, 0.0).
+``` metal
+typedef struct
+{
+    // The [[position]] attribute of this member indicates that this value
+    // is the clip space position of the vertex when this structure is
+    // returned from the vertex function.
+    vector_float4 position [[position]];
 
-![Clip-Space Mapping to the Viewport](Documentation/ClipSpaceMappingToViewport.png)
+    // Since this member does not have a special attribute, the rasterizer
+    // interpolates its value with the values of the other triangle vertices
+    // and then passes the interpolated value to the fragment shader for each
+    // fragment in the triangle.
+    vector_float4 color;
 
-A vertex function executes once for each vertex drawn. In this sample, for each frame, three vertices are drawn to make up a triangle. Thus, the vertex function executes three times per frame.
+} RasterizerData;
+```
 
-Vertex functions are written in the Metal shading language, which is based on C++ 14. Metal shading language code may seem similar to traditional C/C++ code, but the two are fundamentally different. Traditional C/C++ code is typically executed on the CPU, whereas Metal shading language code is exclusively executed on the GPU. The GPU offers much larger processing bandwidth and can work, in parallel, on a larger number of vertices and fragments.  However, it has less memory than a CPU, does not handle control flow operations as efficiently, and generally has higher latency.
+The fragment function just receives the rasterization stage data, so you don't need to define any additional structures to hold other argument data.
 
-The vertex function in this sample is called `vertexShader` and this is its signature.
+
+## Declare the Vertex Function
+
+Declare the vertex function, including its input arguments and the data it outputs.
+Much like compute functions were declared using the `kernel` keyword, you declare a vertex function using the `vertex` keyword.
 
 ``` metal
 vertex RasterizerData
@@ -91,134 +130,115 @@ vertexShader(uint vertexID [[vertex_id]],
              constant vector_uint2 *viewportSizePointer [[buffer(AAPLVertexInputIndexViewportSize)]])
 ```
 
-**Declare Vertex Function Parameters**
+The first argument, `vertexID`, uses the `[[vertex_id]]` attribute qualifier, which is another Metal keyword.
+When you execute a render command, the GPU calls your vertex function multiple times, generating a unique value for each vertex.
 
-The first parameter, `vertexID`, uses the `[[vertex_id]]` attribute qualifier and holds the index of the vertex currently being executed. When a draw call uses this vertex function, this value begins at 0 and is incremented for each invocation of the `vertexShader` function. A parameter using the `[[vertex_id]]` attribute qualifier is typically used to index into an array that contains vertices.
+The second argument, `vertices`, is an array that contains the vertex data, using the `AAPLVertex` struct previously defined.
 
-The second parameter, `vertices`, is the array that contains vertices, with each vertex defined as an `AAPLVertex` data type. A pointer to this structure defines an array of these vertices.
+To transform the position into Metal's coordinates, the function needs the size of the viewport (in pixels) that the triangle is being drawn into, so this is stored in the `viewportSizePointer` argument.
 
-The third and final parameter, `viewportSizePointer`, contains the size of the viewport and has a `vector_uint2` data type.
+The second and third arguments have the `[[buffer(n)]]` attribute qualifier.
+By default, Metal assigns slots in the argument table for each parameter automatically.
+When you add the `[[buffer(n)]]` qualifier to a buffer argument, you tell Metal explicitly which slot to use.
+Declaring slots explicitly can make it easier to revise your shaders without also needing to change your app code.
+Declare the constants for the two indicies in the shared header file.
 
-Both the `vertices` and `viewportSizePointer` parameters use SIMD data types, which are types understood by both C and Metal shading language code. The sample can thus define the `AAPLVertex` structure in the shared `AAPLShaderTypes.h` header, included in both the `AAPLRenderer.m` and `AAPLShaders.metal` code. Therefore, the shared header ensures that the data type of the triangle's vertices is the same in the Objective-C declaration (`triangleVertices`) as it is in the Metal shading language declaration (`vertices`). Using SIMD data types in your Metal app ensures that memory layouts match exactly across CPU/GPU declarations and facilitates sending vertex data from the CPU to the GPU.
+The function's output is a `RasterizerData` struct.
 
-- Note: Any changes to the `AAPLVertex` structure affect both the `AAPLRenderer.m` and `AAPLShaders.metal` code equally.
+## Implement the Vertex Function
 
-Both the `vertices` and `viewportSizePointer` parameters use the `[[buffer(index)]]` attribute qualifier. The values of `AAPLVertexInputIndexVertices` and `AAPLVertexInputIndexViewportSize` are the indices used to identify and set the inputs to the vertex function in both the `AAPLRenderer.m` and `AAPLShaders.metal` code.
-
-**Declare Vertex Function Return Values**
-
-The `RasterizerData` structure defines the return value of the vertex function.
-
-``` metal
-typedef struct
-{
-    // The [[position]] attribute of this member indicates that this value is the clip space
-    // position of the vertex when this structure is returned from the vertex function
-    float4 clipSpacePosition [[position]];
-
-    // Since this member does not have a special attribute, the rasterizer interpolates
-    // its value with the values of the other triangle vertices and then passes
-    // the interpolated value to the fragment shader for each fragment in the triangle
-    float4 color;
-
-} RasterizerData;
-```
-
-Vertex functions must return a clip-space position value for each vertex via the `[[position]]` attribute qualifier, which the `clipSpacePosition` member uses. When this attribute is declared, the next stage of the pipeline, rasterization, uses the `clipSpacePosition` values to identify the position of the triangle's corners and determine which pixels to render.
-
-**Process Vertex Data**
-
-The body of the sample's vertex function does two things to the input vertices:
-1. Performs coordinate-system transformations, writing the resulting vertex clip-space position to the `out.clipSpacePosition` return value.
-2. Passes the vertex color to the `out.color` return value.
-
-To get an input vertex, the `vertexID` parameter is used to index into the `vertices` array.
+Your vertex function must generate both the position and color values. 
+First, use the `vertexID` argument to index into the `vertices` array and read the input data for the vertex.
+Also, retrieve the viewport dimensions.
 
 ``` metal
-float2 pixelSpacePosition = vertices[vertexID].position.xy;
+vector_float2 pixelSpacePosition = vertices[vertexID].position.xy;
+
+// Get the viewport size and cast to float.
+vector_float2 viewportSize = vector_float2(*viewportSizePointer);
+
 ```
 
-This sample obtains a 2D vertex coordinate from the `position` member of each `vertices` element and converts it into a clip-space position written to the `out.clipSpacePosition` return value. Each vertex input position is defined relative to the number of pixels in the x and y directions from the center of the viewport. Thus, to convert these pixel-space positions to clip-space positions, the vertex function divides by half the viewport size.
+Next, you are going to generate coordinates for the rasterizer, and to do that, you need to understand some of Metal's coordinate systems.
+
+Vertex functions always provide position data to the rasterizer in *clip-space coordinates*, which are 3D points specified using a four-dimensional homogenous vector (`x,y,z,w`). The rasterization stage takes the output position and divides the `x`,`y`, and `z` coordinates by `w` to generate a 3D point in *normalized device coordinates*. 
+
+Normalized device coordinates are independent of viewport size and use a *left-handed coordinate system* and map to positions in the viewport.
+Metal clips primitives to a box in this coordinate system and rasterizes them.
+The lower-left corner of the clipping box is at an `(x,y)` coordinate of `(-1.0,-1.0)` and the upper-right corner is at `(1.0,1.0)`.
+Positive-z values point away from the camera (into the screen.)
+The visible portion of the `z` coordinate is between `0.0` (the near clipping plane) and `1.0` (the far clipping plane).
+
+**Figure 2** Normalized device coordinate system
+![Normalized device coordinate system](Documentation/normalizeddevicecoords.png)
+
+Transform the point in the app's viewport-based coordinate system to Metal's normalized device coordinate system, as shown in the code below. You must set all four coordinates.
 
 ``` metal
-out.clipSpacePosition.xy = pixelSpacePosition / (viewportSize / 2.0);
+out.position = vector_float4(0.0, 0.0, 0.0, 1.0);
+out.position.xy = pixelSpacePosition / (viewportSize / 2.0);
 ```
 
-Finally, the vertex function accesses the `color` member of each `vertices` element and passes it along to the `out.color` return value, without performing any modifications.
+Because this is a 2D application, the code sets `z` to `0.0` and `w` to `1.0`. When `w` is `1.0`, the output coordinates are already in the normalized device coordinate system. The `x` and `y` coordinates are relative to an origin centered in the viewport. To generate normalized device coordinates, you divide the viewport coordinates by half the width and height of the viewport. You are using SIMD types, so you can divide both coordinates at the same time. 
+
+Now that the position is complete, finish the function by copying the color value into the `out.color` return value:
 
 ``` metal
 out.color = vertices[vertexID].color;
 ```
 
-The contents of the `RasterizerData` return value are now complete, and the structure is passed along to the next stage in the pipeline.
+## Implement a Fragment Function
 
-## Rasterization
+A *fragment* is a possible change to the render targets. The rasterizer determines which pixels of the render target are covered by the primitive.
+Only fragments whose pixel centers are inside the triangle are rendered.
 
-After the vertex function executes three times, once for each of the triangle's vertices, the next stage in the pipeline, rasterization, begins.
+**Figure 3** Fragments generated by the rasterization stage
+![Fragments generated by the rasterization stage](Documentation/Rasterization.png)
 
-Rasterization is the stage in which the pipeline's rasterizer unit produces fragments. A fragment contains raw prepixel data that's used to produce the pixels rendered to a drawable. For each complete triangle produced by the vertex function, the rasterizer determines which pixels of the destination drawable are covered by the triangle. It does so by testing whether the center of each pixel in the drawable is the inside the triangle. In the following diagram, only fragments whose pixel center is inside the triangle are produced. These fragments are shown as gray squares.
+A fragment function processes incoming information from the rasterizer for a single position and calculates output values for each of the render targets. These fragment values are processed by later stages in the pipeline, eventually being written to the render targets.
 
-![Fragments Produced by the Rasterization of a Single Triangle](Documentation/Rasterization.png)
+- Note: The reason a fragment is called a possible change is because the pipeline stages after the fragment stage can be configured to reject some fragments or change what gets written to the render targets. In this sample, all values calculated by the fragment stage are written as-is to the render target.
 
-Rasterization also determines the values that are sent to the next stage in the pipeline: the fragment function. Earlier in the pipeline, the vertex function output the values of a `RasterizerData` structure, which contains a clip-space position (`clipSpacePosition`) and a color (`color`). The `clipSpacePosition` member uses the required `[[position]]` attribute qualifier, indicating that these values are directly used to determine the triangle's fragment coverage area. The `color` member doesn't have an attribute qualifier, indicating that these values should be interpolated across the triangle's fragments.
-
-The rasterizer passes `color` values to the fragment function after converting them from per-vertex values to per-fragment values. This conversion uses a fixed interpolation function, which calculates a single weighted color derived from the `color` values of the triangle's three vertices. The weights for the interpolation function (also known as *barycentric coordinates*.) are the relative distances of each vertex position to the center of a fragment. For example:
-
-* If a fragment is exactly in the middle of a triangle, equidistant from each of the triangle's three vertices, the color of each vertex is weighted by 1/3. In the following diagram, this is shown as the gray fragment (0.33, 0.33, 0.33) in the center of the triangle.
-
-* If a fragment is very close to one vertex and very far from the other two, the color of the close vertex is weighted toward 1 and the color of the far ones is weighted toward 0. In the following diagram, this is shown as the reddish fragment (0.5, 0.25, 0.25) near the bottom-right corner of the triangle.
-
-* If a fragment is on an edge of the triangle, midway between two of the three vertices, the color of each edge-defining vertex is weighted by 1/2 and the color of the nonedge vertex is weighted by 0. In the following diagram, this is shown as the cyan fragment (0.0, 0.5, 0.5) on the left edge of the triangle.
-
-![Interpolated Fragment Colors](Documentation/Interpolation.png)
-
-Because rasterization is a fixed pipeline stage, its behavior can't be modified by custom Metal shading language code. After the rasterizer creates a fragment, along with its associated values, the results are passed along to the next stage in the pipeline.
-
-## Write a Fragment Function
-
-The main task of a fragment function (also known as *fragment shader*) is to process incoming fragment data and calculate a color value for the drawable's pixels.
-
-The fragment function in this sample is called `fragmentShader` and this is its signature.
+The fragment shader in this sample receives the same parameters that were declared in the vertex shader's output. Declare the fragment function using the `fragment` keyword. It takes a single argument, the same `RasterizerData` structure that was provided by the vertex stage. Add the `[[stage_in]]` attribute qualifier to indicate that this argument is generated by the rasterizer.
 
 ``` metal
-fragment float4 fragmentShader(RasterizerData in [[stage_in]])
+fragment vector_float4 fragmentShader(RasterizerData in [[stage_in]])
 ```
 
-The function has a single parameter, `in`, that uses the same `RasterizerData` structure returned by the vertex function.  The `[[stage_in]]` attribute qualifier indicates that this parameter comes from the rasterizer. The function returns a four-component floating-point vector, which contains the final RGBA color value to be rendered to the drawable.
+If your fragment function writes to multiple render targets, it must declare a struct with fields for each render target.
+Because this sample only has a single render target, you specify a floating-point vector directly as the function's output. This output is the color to be written to the render target.
 
-This sample demonstrates a very simple fragment function that returns the interpolated `color` value from the rasterizer, without further processing. Each fragment renders its interpolated `color` value to its corresponding pixel in the triangle.
+The rasterization stage calculates values for each fragment's arguments and calls the fragment function with them.
+The rasterization stage calculates its color argument as a blend of the colors at the triangle's vertices.
+The closer a fragment is to a vertex, the more that vertex contributes to the final color.
+
+**Figure 4** Interpolated fragment colors
+![Interpolated Fragment Colors](Documentation/Interpolation.png)
+
+In this sample, the fragment function relies on the calculations performed by the rasterizer, and doesn't perform any additional work. Return the interpolated color as the function's output. 
 
 ``` metal
 return in.color;
 ```
 
-## Obtain Function Libraries and Create a Pipeline
+## Create a Render Pipeline State Object
 
-When building the sample, Xcode compiles the `AAPLShaders.metal` file along with the Objective-C code.  However, Xcode can't link the `vertexShader` and `fragmentShader` functions at build time; instead, the app needs to explicitly link these functions at runtime.
-
-Metal shading language code is compiled in two stages:
-
-1. Front-end compilation happens in Xcode at build time. `.metal` files are compiled from high-level source code into intermediate representation (IR) files.
-2. Back-end compilation happens in a physical device at runtime. IR files are then compiled into low-level machine code.
-
-Each GPU family has a different instruction set. As a result, Metal shading language code can only be fully compiled into native GPU code at runtime, by the physical device itself. Front-end compilation reduces some of this compilation overhead by storing IR in a `default.metallib` file that's packaged inside the sample's `.app` bundle.
-
-The `default.metallib` file is a library of Metal shading language functions that's represented by a `MTLLibrary` object retrieved at runtime by calling the `newDefaultLibrary` method. From this library, specific functions represented by `MTLFunction` objects can be retrieved.
+Now that the functions are complete, you can create a render pipeline that uses them.
+First, get the default library and obtain a [`MTLFunction`][MTLFunction] object for each function.
 
 ``` objective-c
-// Load all the shader files with a .metal file extension in the project
 id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
 
-// Load the vertex function from the library
 id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
-
-// Load the fragment function from the library
 id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
 ```
 
-These `MTLFunction` objects are used to create a `MTLRenderPipelineState` object that represents the graphics-rendering pipeline. Calling the  `newRenderPipelineStateWithDescriptor:error:` method of a `MTLDevice` object begins the back-end compilation process that links the `vertexShader` and `fragmentShader` functions, resulting in a fully compiled pipeline.
+Next, create a [`MTLRenderPipelineState`][MTLRenderPipelineState] object.
+Render pipelines have more stages to configure, so you use a [`MTLRenderPipelineDescriptor`][MTLRenderPipelineDescriptor] to configure the pipeline.
 
-A `MTLRenderPipelineState` object contains additional pipeline settings that are configured by a `MTLRenderPipelineDescriptor` object. Besides the vertex and fragment functions, this sample also configures the `pixelFormat` value of the first entry in the `colorAttachments` array. This sample only renders to a single target, the view's drawable (`colorAttachments[0]`), whose pixel format is configured by the view itself (`colorPixelFormat`). A view's pixel format defines the memory layout of each of its pixels; Metal must be able to reference this layout when creating the pipeline so that it can properly render the color values produced by the fragment function.
+As shown in the following code, in addition to specifying the vertex and fragment functions, you also declare the *pixel format* of all render targets that the pipeline will draw into. Your render pipeline state must use a pixel format that is compatible with the one specified by the render pass.
+Because this sample only has one render target and it is provided by the view, copy the view's pixel format into the render pipeline descriptor.
+
 
 ``` objective-c
 MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
@@ -230,59 +250,93 @@ pipelineStateDescriptor.colorAttachments[0].pixelFormat = mtkView.colorPixelForm
 _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor
                                                          error:&error];
 ```
+ 
+When Metal creates the render pipeline state object, the pipeline is configured to convert the fragment function's output into the render target's pixel format.
+If you want to target a different pixel format, you need to create a different pipeline state object.
+You can reuse the same shaders in multiple pipelines targeting different pixel formats.
 
-## Send Vertex Data to a Vertex Function
+Pixel formats are described in more detail in Creating and Texturing Samples.
 
-After the pipeline is created, it can be assigned to a render command encoder. This operation that all subsequent rendering commands will be processed by that specific pipeline.
+ 
+## Set a Viewport
+
+Now that you have the render pipeline state object for the pipeline, you'll render the triangle. You do this using a render command encoder. First, set the viewport, so that Metal knows which part of the render target you want to draw into.
+
+``` objective-c
+// Set the region of the drawable to draw into.
+[renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
+```
+
+## Set the Render Pipeline State
+
+Set the render pipeline state for the pipeline you want to use.
 
 ``` objective-c
 [renderEncoder setRenderPipelineState:_pipelineState];
 ```
 
-This sample uses the `setVertexBytes:length:atIndex:` method to send vertex data to a vertex function. As mentioned earlier, the signature of the sample's `vertexShader` function has two parameters, `vertices` and `viewportSizePointer`, that use the `[[buffer(index)]]` attribute qualifier. The value of the `index` parameter in the `setVertexBytes:length:atIndex:` method maps to the parameter with the same `index` value in the `[[buffer(index)]]` attribute qualifier. Thus, calling the `setVertexBytes:length:atIndex:` method sets specific vertex data for a specific vertex function parameter.
+## Send Argument Data to the Vertex Function
 
-The `AAPLVertexInputIndexVertices` and `AAPLVertexInputIndexViewportSize` values are defined in the `AAPLShaderTypes.h` header shared between the `AAPLRenderer.m` and `AAPLShaders.metal` files. The sample uses these values for the `index` parameter of both the `setVertexBytes:length:atIndex:` method and the `[[buffer(index)]]` attribute qualifier corresponding to the same vertex function. Sharing these values across different files makes the sample more robust by reducing potential index mismatches due to hard-coded integers (which could send the wrong data to the wrong parameter).
+Often, you use buffers ([`MTLBuffer`][MTLBuffer]) to pass data to shaders.
+However, when you need to pass only a small amount of data to the vertex function, as is the case here, copy the data directly into the command buffer.
 
-This sample sends the following vertex data to a vertex function:
-* The `triangleVertices` pointer is sent to the `vertices` parameter, using the `AAPLVertexInputIndexVertices` index value
-* The `_viewportSize` pointer is sent to `viewportSizePointer` parameter, using the `AAPLVertexInputIndexViewportSize` index value
+The sample copies data for both parameters into the command buffer.
+The vertex data is copied from an array defined in the sample.
+The viewport data is copied from the same variable that you used to set the viewport. 
+
+In this sample, the fragment function uses only the data it receives from the rasterizer, so there are no arguments to set.
 
 ``` objective-c
-// You send a pointer to the `triangleVertices` array also and indicate its size
-// The `AAPLVertexInputIndexVertices` enum value corresponds to the `vertexArray`
-// argument in the `vertexShader` function because its buffer attribute also uses
-// the `AAPLVertexInputIndexVertices` enum value for its index
 [renderEncoder setVertexBytes:triangleVertices
                        length:sizeof(triangleVertices)
                       atIndex:AAPLVertexInputIndexVertices];
 
-// You send a pointer to `_viewportSize` and also indicate its size
-// The `AAPLVertexInputIndexViewportSize` enum value corresponds to the
-// `viewportSizePointer` argument in the `vertexShader` function because its
-//  buffer attribute also uses the `AAPLVertexInputIndexViewportSize` enum value
-//  for its index
 [renderEncoder setVertexBytes:&_viewportSize
                        length:sizeof(_viewportSize)
                       atIndex:AAPLVertexInputIndexViewportSize];
 ```
 
-## Draw the Triangle
 
-After setting a pipeline and its associated vertex data, issuing a draw call executes the pipeline and draws the sample's single triangle. The sample encodes a single drawing command into the render command encoder.
+## Encode the Drawing Command
 
-Triangles are geometric primitives in Metal that require three vertices to be drawn. Other primitives include lines that require two vertices, or points that require just one vertex. The `drawPrimitives:vertexStart:vertexCount:` method lets you specify exactly what type of primitive to draw and which vertices, derived from the previously set vertex data, to use. Setting 0 for the `vertexStart` parameter indicates that drawing should begin with the first vertex in the array of vertices. This means that the first value of the vertex function's `vertexID` parameter, which uses the `[[vertex_id]]` attribute qualifier, will be 0. Setting 3 for the `vertexCount` parameter indicates that three vertices should be drawn, producing a single triangle. (That is, the vertex function is executed three times with values of 0, 1, and 2 for the `vertexID` parameter).
+Specify the kind of primitive, the starting index, and the number of vertices.
+When the triangle is rendered, the vertex function is called with values of 0, 1, and 2 for the `vertexID` argument.
 
 ``` objective-c
-// Draw the 3 vertices of our triangle
+// Draw the triangle.
 [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle
                   vertexStart:0
                   vertexCount:3];
 ```
 
-This call is the last call needed to encode the rendering commands for a single triangle. With the drawing complete, the render loop can end encoding, commit the command buffer, and present the drawable containing the rendered triangle.
+As with Drawing to the Screen Using Metal, you end the encoding process and commit the command buffer.
+However, you could encode more render commands using the same set of steps.
+The final image is rendered as if the commands were processed in the order they were specified.
+(For performance, the GPU is allowed to process commands or even parts of commands in parallel, so long as the final result appears to have been rendered in order. )
 
-## Next Steps
+## Experiment with the Color Interpolation
 
-In this sample, you learned how to render basic geometry in Metal.
+In this sample, color values were interpolated across the triangle.
+That's often what you want, but sometimes you want a value to be generated by one vertex and remain constant across the whole primitive.
+Specify the `flat` attribute qualifier on an output of the vertex function to do this.
+Try this now.
+Find the definition of `RasterizerData` in the sample project and add the `[[flat]]` qualifier to its `color` field.
 
-In the [Basic Buffers](https://developer.apple.com/documentation/metal/basic_buffers) sample, you'll learn how to use a vertex buffer to improve your rendering efficiency.
+`float4 color [[flat]];`
+
+Run the sample again.
+The render pipeline uses the color value from the first vertex (called the *provoking vertex*) uniformly across the triangle, and it ignores the colors from the other two vertices.
+You can use a mix of flat shaded and interpolated values, simply by adding or omitting the `flat` qualifier on your vertex function's outputs.
+The [Metal Shading Language specification][ShadingLanguageSpec] defines other attribute qualifiers you can also use to modify the rasterization behavior.
+
+[ScreenDrawing]: https://developer.apple.com/documentation/metal
+[MTLDevice]: https://developer.apple.com/documentation/metal/mtldevice
+[MTLResource]: https://developer.apple.com/documentation/metal/mtlresource
+[MTLBuffer]: https://developer.apple.com/documentation/metal/mtlbuffer
+[MTLRenderPipelineState]: https://developer.apple.com/documentation/metal/mtlrenderpipelinestate
+[MTLRenderPipelineDescriptor]: https://developer.apple.com/documentation/metal/mtlrenderpipelinedescriptor
+[MTLRenderCommandEncoder]: https://developer.apple.com/documentation/metal/mtlrendercommandencoder
+[MTLPixelFormat]: https://developer.apple.com/documentation/metal/mtlpixelformat
+[MTKView]: https://developer.apple.com/documentation/metalkit/mtkview
+[ShadingLanguageSpec]: https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf
+[MTLFunction]: https://developer.apple.com/documentation/metal/mtlfunction

@@ -2,7 +2,7 @@
 See LICENSE folder for this sample’s licensing information.
 
 Abstract:
-Implementation of our platform independent renderer class, which performs Metal setup and per frame rendering
+Implementation of a platform independent renderer class, which performs Metal setup and per frame rendering
 */
 
 @import simd;
@@ -11,26 +11,24 @@ Implementation of our platform independent renderer class, which performs Metal 
 #import "AAPLRenderer.h"
 
 // Header shared between C code here, which executes Metal API commands, and .metal files, which
-//   uses these types as inputs to the shaders
+// uses these types as inputs to the shaders.
 #import "AAPLShaderTypes.h"
 
 // Main class performing the rendering
 @implementation AAPLRenderer
 {
-    // The device (aka GPU) we're using to render
     id<MTLDevice> _device;
 
-    // Our render pipeline composed of our vertex and fragment shaders in the .metal shader file
+    // The render pipeline generated from the vertex and fragment shaders in the .metal shader file.
     id<MTLRenderPipelineState> _pipelineState;
 
-    // The command Queue from which we'll obtain command buffers
+    // The command queue used to pass commands to the device.
     id<MTLCommandQueue> _commandQueue;
 
-    // The current size of our view so we can use this in our render pipeline
+    // The current size of the view, used as an input to the vertex shader.
     vector_uint2 _viewportSize;
 }
 
-/// Initialize with the MetalKit view from which we'll obtain our Metal device
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView
 {
     self = [super init];
@@ -40,16 +38,13 @@ Implementation of our platform independent renderer class, which performs Metal 
 
         _device = mtkView.device;
 
-        // Load all the shader files with a .metal file extension in the project
+        // Load all the shader files with a .metal file extension in the project.
         id<MTLLibrary> defaultLibrary = [_device newDefaultLibrary];
 
-        // Load the vertex function from the library
         id<MTLFunction> vertexFunction = [defaultLibrary newFunctionWithName:@"vertexShader"];
-
-        // Load the fragment function from the library
         id<MTLFunction> fragmentFunction = [defaultLibrary newFunctionWithName:@"fragmentShader"];
 
-        // Configure a pipeline descriptor that is used to create a pipeline state
+        // Configure a pipeline descriptor that is used to create a pipeline state.
         MTLRenderPipelineDescriptor *pipelineStateDescriptor = [[MTLRenderPipelineDescriptor alloc] init];
         pipelineStateDescriptor.label = @"Simple Pipeline";
         pipelineStateDescriptor.vertexFunction = vertexFunction;
@@ -60,10 +55,10 @@ Implementation of our platform independent renderer class, which performs Metal 
                                                                  error:&error];
         if (!_pipelineState)
         {
-            // Pipeline State creation could fail if we haven't properly set up our pipeline descriptor.
-            //  If the Metal API validation is enabled, we can find out more information about what
+            // Pipeline State creation could fail if the pipeline descriptor isn't set up properly.
+            //  If the Metal API validation is enabled, you can find out more information about what
             //  went wrong.  (Metal API validation is enabled by default when a debug build is run
-            //  from Xcode)
+            //  from Xcode.)
             NSLog(@"Failed to created pipeline state, error %@", error);
             return nil;
         }
@@ -78,13 +73,12 @@ Implementation of our platform independent renderer class, which performs Metal 
 /// Called whenever view changes orientation or is resized
 - (void)mtkView:(nonnull MTKView *)view drawableSizeWillChange:(CGSize)size
 {
-    // Save the size of the drawable as we'll pass these
-    //   values to our vertex shader when we draw
+    // Save the size of the drawable to pass to the vertex shader.
     _viewportSize.x = size.width;
     _viewportSize.y = size.height;
 }
 
-/// Called whenever the view needs to render a frame
+/// Called whenever the view needs to render a frame.
 - (void)drawInMTKView:(nonnull MTKView *)view
 {
     static const AAPLVertex triangleVertices[] =
@@ -95,62 +89,46 @@ Implementation of our platform independent renderer class, which performs Metal 
         { {    0,   250 }, { 0, 0, 1, 1 } },
     };
 
-    // Create a new command buffer for each render pass to the current drawable
+    // Create a new command buffer for each render pass to the current drawable.
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     commandBuffer.label = @"MyCommand";
 
-    // Obtain a renderPassDescriptor generated from the view's drawable textures
+    // Obtain a renderPassDescriptor generated from the view's drawable textures.
     MTLRenderPassDescriptor *renderPassDescriptor = view.currentRenderPassDescriptor;
 
     if(renderPassDescriptor != nil)
     {
-        // Create a render command encoder so we can render into something
+        // Create a render command encoder.
         id<MTLRenderCommandEncoder> renderEncoder =
         [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
         renderEncoder.label = @"MyRenderEncoder";
 
-        // Set the region of the drawable to which we'll draw.
-        [renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, -1.0, 1.0 }];
-
+        // Set the region of the drawable to draw into.
+        [renderEncoder setViewport:(MTLViewport){0.0, 0.0, _viewportSize.x, _viewportSize.y, 0.0, 1.0 }];
+        
         [renderEncoder setRenderPipelineState:_pipelineState];
 
-        // We call -[MTLRenderCommandEncoder setVertexBytes:length:atIndex:] to send data from our
-        //   Application ObjC code here to our Metal 'vertexShader' function
-        // This call has 3 arguments
-        //   1) A pointer to the memory we want to pass to our shader
-        //   2) The memory size of the data we want passed down
-        //   3) An integer index which corresponds to the index of the buffer attribute qualifier
-        //      of the argument in our 'vertexShader' function
-
-        // You send a pointer to the `triangleVertices` array also and indicate its size
-        // The `AAPLVertexInputIndexVertices` enum value corresponds to the `vertexArray`
-        // argument in the `vertexShader` function because its buffer attribute also uses
-        // the `AAPLVertexInputIndexVertices` enum value for its index
+        // Pass in the parameter data.
         [renderEncoder setVertexBytes:triangleVertices
                                length:sizeof(triangleVertices)
                               atIndex:AAPLVertexInputIndexVertices];
-
-        // You send a pointer to `_viewportSize` and also indicate its size
-        // The `AAPLVertexInputIndexViewportSize` enum value corresponds to the
-        // `viewportSizePointer` argument in the `vertexShader` function because its
-        //  buffer attribute also uses the `AAPLVertexInputIndexViewportSize` enum value
-        //  for its index
+        
         [renderEncoder setVertexBytes:&_viewportSize
                                length:sizeof(_viewportSize)
                               atIndex:AAPLVertexInputIndexViewportSize];
 
-        // Draw the 3 vertices of our triangle
+        // Draw the triangle.
         [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle
                           vertexStart:0
                           vertexCount:3];
 
         [renderEncoder endEncoding];
 
-        // Schedule a present once the framebuffer is complete using the current drawable
+        // Schedule a present once the framebuffer is complete using the current drawable.
         [commandBuffer presentDrawable:view.currentDrawable];
     }
 
-    // Finalize rendering here & push the command buffer to the GPU
+    // Finalize rendering here & push the command buffer to the GPU.
     [commandBuffer commit];
 }
 
