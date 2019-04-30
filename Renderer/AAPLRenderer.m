@@ -53,12 +53,15 @@ Implementation of a platform independent renderer class, which performs Metal se
 
         _pipelineState = [_device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor
                                                                  error:&error];
-                
-        // Pipeline State creation could fail if the pipeline descriptor isn't set up properly.
-        //  If the Metal API validation is enabled, you can find out more information about what
-        //  went wrong.  (Metal API validation is enabled by default when a debug build is run
-        //  from Xcode.)
-        NSAssert(_pipelineState, @"Failed to created pipeline state: %@", error);
+        if (!_pipelineState)
+        {
+            // Pipeline State creation could fail if the pipeline descriptor isn't set up properly.
+            //  If the Metal API validation is enabled, you can find out more information about what
+            //  went wrong.  (Metal API validation is enabled by default when a debug build is run
+            //  from Xcode.)
+            NSLog(@"Failed to created pipeline state, error %@", error);
+            return nil;
+        }
 
         // Create the command queue
         _commandQueue = [_device newCommandQueue];
