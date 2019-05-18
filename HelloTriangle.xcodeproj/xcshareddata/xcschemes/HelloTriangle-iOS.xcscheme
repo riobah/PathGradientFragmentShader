@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Scheme version="1.3" LastUpgradeVersion="1100">
+	<AnalyzeAction buildConfiguration="Debug" />
+	<ArchiveAction revealArchiveInOrganizer="YES" buildConfiguration="Release" />
+	<TestAction selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" buildConfiguration="Debug" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB" shouldUseLaunchSchemeArgsEnv="YES" codeCoverageEnabled="NO">
+		<Testables />
+	</TestAction>
+	<ProfileAction useCustomWorkingDirectory="NO" savedToolIdentifier="" debugDocumentVersioning="YES" buildConfiguration="Release" shouldUseLaunchSchemeArgsEnv="YES">
+		<BuildableProductRunnable runnableDebuggingMode="0">
+			<BuildableReference BlueprintIdentifier="3A35328E1E99974500C194AD" BuildableIdentifier="primary" BuildableName="HelloTriangle.app" BlueprintName="HelloTriangle-iOS" ReferencedContainer="container:HelloTriangle.xcodeproj" />
+		</BuildableProductRunnable>
+	</ProfileAction>
+	<BuildAction buildImplicitDependencies="YES" parallelizeBuildables="YES">
+		<BuildActionEntries>
+			<BuildActionEntry buildForAnalyzing="YES" buildForRunning="YES" buildForTesting="YES" buildForProfiling="YES" buildForArchiving="YES">
+				<BuildableReference BlueprintName="HelloTriangle-iOS" BuildableIdentifier="primary" BuildableName="HelloTriangle.app" BlueprintIdentifier="3A35328E1E99974500C194AD" ReferencedContainer="container:HelloTriangle.xcodeproj" />
+			</BuildActionEntry>
+		</BuildActionEntries>
+	</BuildAction>
+	<LaunchAction buildConfiguration="Debug" ignoresPersistentStateOnLaunch="NO" debugServiceExtension="internal" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB" launchStyle="0" useCustomWorkingDirectory="NO" debugDocumentVersioning="YES" allowLocationSimulation="YES">
+		<BuildableProductRunnable runnableDebuggingMode="0">
+			<BuildableReference BlueprintIdentifier="3A35328E1E99974500C194AD" BuildableIdentifier="primary" BlueprintName="HelloTriangle-iOS" BuildableName="HelloTriangle.app" ReferencedContainer="container:HelloTriangle.xcodeproj" />
+		</BuildableProductRunnable>
+	</LaunchAction>
+</Scheme>
