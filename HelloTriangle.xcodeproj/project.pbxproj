@@ -31,8 +31,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		18494A401848C1C000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
-		19E1C20019E16D8000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
+		19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
+		19E8FEE019E8FCB000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
 		3A05CBDE1F731AB800CA21B1 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A1F1B401F0338C6001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A1F1B411F0338CF001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../AppleTVOS.platform/Developer/SDKs/AppleTVOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
@@ -86,18 +86,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1848BE801848BE4000000001 /* Configuration */ = {
+		19E3D21019E3D1D000000001 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				18494A401848C1C000000001 /* SampleCode.xcconfig */,
+				19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */,
 			);
 			name = Configuration;
 			sourceTree = "<group>";
 		};
-		19E1A1D019E2269000000001 /* LICENSE */ = {
+		19E8F5D019E8F8A000000001 /* LICENSE */ = {
 			isa = PBXGroup;
 			children = (
-				19E1C20019E16D8000000001 /* LICENSE.txt */,
+				19E8FEE019E8FCB000000001 /* LICENSE.txt */,
 			);
 			name = LICENSE;
 			path = LICENSE;
@@ -139,8 +139,8 @@
 				3A3532911E99974500C194AD /* Application */,
 				3AE289861EEA0A9100DF4C9A /* Frameworks */,
 				3A3532901E99974500C194AD /* Products */,
-				1848BE801848BE4000000001 /* Configuration */,
-				19E1A1D019E2269000000001 /* LICENSE */,
+				19E3D21019E3D1D000000001 /* Configuration */,
+				19E8F5D019E8F8A000000001 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -393,7 +393,7 @@
 /* Begin XCBuildConfiguration section */
 		3A3532E01E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -448,7 +448,7 @@
 		};
 		3A3532E11E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -496,7 +496,7 @@
 		};
 		3A3532E31E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -522,7 +522,7 @@
 		};
 		3A3532E41E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -547,7 +547,7 @@
 		};
 		3A3532E61E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -573,7 +573,7 @@
 		};
 		3A3532E71E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -598,7 +598,7 @@
 		};
 		3A3532E91E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -620,7 +620,7 @@
 		};
 		3A3532EA1E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 18494A401848C1C000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
