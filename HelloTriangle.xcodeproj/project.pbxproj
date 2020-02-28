@@ -13,7 +13,6 @@
 		3A1F1B3D1F033827001622B3 /* AAPLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A35329C1E99974500C194AD /* AAPLViewController.m */; };
 		3A1F1B3E1F033846001622B3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3532931E99974500C194AD /* main.m */; };
 		3A1F1B3F1F033846001622B3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3532931E99974500C194AD /* main.m */; };
-		3A1F1B431F0338DE001622B3 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A1F1B401F0338C6001622B3 /* MetalKit.framework */; };
 		3A1F1B441F033EF3001622B3 /* AAPLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD21341EAE60D2000D1DED /* AAPLAppDelegate.m */; };
 		3A3532941E99974500C194AD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3532931E99974500C194AD /* main.m */; };
 		3A35329D1E99974500C194AD /* AAPLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A35329C1E99974500C194AD /* AAPLViewController.m */; };
@@ -31,10 +30,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */ = {isa = PBXFileReference; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
-		19E8FEE019E8FCB000000001 /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
+		328A8E964EC41C65EC8AF01A /* LICENSE.txt */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE.txt; sourceTree = "<group>"; };
 		3A05CBDE1F731AB800CA21B1 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../iPhoneOS.platform/Developer/SDKs/iPhoneOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
-		3A1F1B401F0338C6001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A1F1B411F0338CF001622B3 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = ../../../../AppleTVOS.platform/Developer/SDKs/AppleTVOS11.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		3A3532841E99974500C194AD /* AAPLRenderer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AAPLRenderer.h; sourceTree = "<group>"; };
 		3A3532851E99974500C194AD /* AAPLRenderer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AAPLRenderer.m; sourceTree = "<group>"; };
@@ -56,6 +53,7 @@
 		3ACD21331EAE60D2000D1DED /* AAPLAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AAPLAppDelegate.h; sourceTree = "<group>"; };
 		3ACD21341EAE60D2000D1DED /* AAPLAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AAPLAppDelegate.m; sourceTree = "<group>"; };
 		3ED283CC1EC2C6D200A23F58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		907FE32A28789CDAFD777257 /* SampleCode.xcconfig */ = {isa = PBXFileReference; name = SampleCode.xcconfig; path = Configuration/SampleCode.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,30 +77,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A1F1B431F0338DE001622B3 /* MetalKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		19E3D21019E3D1D000000001 /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */,
-			);
-			name = Configuration;
-			sourceTree = "<group>";
-		};
-		19E8F5D019E8F8A000000001 /* LICENSE */ = {
-			isa = PBXGroup;
-			children = (
-				19E8FEE019E8FCB000000001 /* LICENSE.txt */,
-			);
-			name = LICENSE;
-			path = LICENSE;
-			sourceTree = "<group>";
-		};
 		3A1F1B351F0336A8001622B3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,8 +119,8 @@
 				3A3532911E99974500C194AD /* Application */,
 				3AE289861EEA0A9100DF4C9A /* Frameworks */,
 				3A3532901E99974500C194AD /* Products */,
-				19E3D21019E3D1D000000001 /* Configuration */,
-				19E8F5D019E8F8A000000001 /* LICENSE */,
+				F4F7FAFBBA6575359FC81F34 /* Configuration */,
+				9772A968083C4C14D4BE84E1 /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -189,6 +169,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		9772A968083C4C14D4BE84E1 /* LICENSE */ = {
+			isa = PBXGroup;
+			children = (
+				328A8E964EC41C65EC8AF01A /* LICENSE.txt */,
+			);
+			name = LICENSE;
+			path = LICENSE;
+			sourceTree = "<group>";
+		};
+		F4F7FAFBBA6575359FC81F34 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				907FE32A28789CDAFD777257 /* SampleCode.xcconfig */,
+			);
+			name = Configuration;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -199,7 +196,6 @@
 				3A35328B1E99974500C194AD /* Sources */,
 				3A35328C1E99974500C194AD /* Frameworks */,
 				3A35328D1E99974500C194AD /* Resources */,
-				A590A630A590A48000000001,
 			);
 			buildRules = (
 			);
@@ -217,7 +213,6 @@
 				3A3532A51E99974500C194AD /* Sources */,
 				3A3532A61E99974500C194AD /* Frameworks */,
 				3A3532A71E99974500C194AD /* Resources */,
-				A590A5D0A590A02000000001,
 			);
 			buildRules = (
 			);
@@ -235,7 +230,6 @@
 				3A3532BB1E99974500C194AD /* Sources */,
 				3A3532BC1E99974500C194AD /* Frameworks */,
 				3A3532BD1E99974500C194AD /* Resources */,
-				A3F01E60A5909B1000000001,
 			);
 			buildRules = (
 			);
@@ -265,6 +259,7 @@
 					};
 					3A3532BE1E99974500C194AD = {
 						CreatedOnToolsVersion = 8.3;
+						DevelopmentTeam = A93A5CM278;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -274,6 +269,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -393,7 +389,7 @@
 /* Begin XCBuildConfiguration section */
 		3A3532E01E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -448,7 +444,7 @@
 		};
 		3A3532E11E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -496,7 +492,7 @@
 		};
 		3A3532E31E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -522,7 +518,7 @@
 		};
 		3A3532E41E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -530,9 +526,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/System/Library/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					TARGET_IOS,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = TARGET_IOS;
 				INFOPLIST_FILE = Application/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -547,7 +541,7 @@
 		};
 		3A3532E61E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -573,7 +567,7 @@
 		};
 		3A3532E71E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -581,9 +575,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/System/Library/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					TARGET_TVOS,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = TARGET_TVOS;
 				INFOPLIST_FILE = Application/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
@@ -598,7 +590,7 @@
 		};
 		3A3532E91E99974500C194AD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -620,14 +612,12 @@
 		};
 		3A3532EA1E99974500C194AD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 19E3CFD019E3AD0000000001 /* SampleCode.xcconfig */;
+			baseConfigurationReference = 907FE32A28789CDAFD777257 /* SampleCode.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					TARGET_MACOS,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = TARGET_MACOS;
 				INFOPLIST_FILE = Application/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;

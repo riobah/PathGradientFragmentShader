@@ -34,7 +34,7 @@ Implementation of a platform independent renderer class, which performs Metal se
     self = [super init];
     if(self)
     {
-        NSError *error = NULL;
+        NSError *error;
 
         _device = mtkView.device;
 
@@ -58,7 +58,7 @@ Implementation of a platform independent renderer class, which performs Metal se
         //  If the Metal API validation is enabled, you can find out more information about what
         //  went wrong.  (Metal API validation is enabled by default when a debug build is run
         //  from Xcode.)
-        NSAssert(_pipelineState, @"Failed to created pipeline state: %@", error);
+        NSAssert(_pipelineState, @"Failed to create pipeline state: %@", error);
 
         // Create the command queue
         _commandQueue = [_device newCommandQueue];

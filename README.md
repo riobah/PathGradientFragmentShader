@@ -4,7 +4,7 @@ Render a simple 2D triangle.
 
 ## Overview
 
-In Drawing to the Screen Using Metal, you learned how to set up an `MTKView` object and to change the view's contents using a render pass.
+In [Using Metal to Draw a View’s Contents](https://developer.apple.com/documentation/metal/basic_tasks_and_concepts/using_metal_to_draw_a_view_s_contents), you learned how to set up an `MTKView` object and to change the view's contents using a render pass.
 That sample simply erased the view's contents to a background color.
 This sample shows you how to configure a render pipeline and use it as part of the render pass to draw a simple 2D colored triangle into the view.
 The sample supplies a position and color for each vertex, and the render pipeline uses that data to render the triangle, interpolating color values between the colors specified for the triangle's vertices.
