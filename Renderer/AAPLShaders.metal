@@ -6,15 +6,14 @@ Metal shaders used for this sample
 */
 
 #include <metal_stdlib>
-#include <simd/simd.h>
 
 using namespace metal;
 
 // Include header shared between this Metal shader code and C code executing Metal API commands.
-#import "AAPLShaderTypes.h"
+#include "AAPLShaderTypes.h"
 
 // Vertex shader outputs and fragment shader inputs
-typedef struct
+struct RasterizerData
 {
     // The [[position]] attribute of this member indicates that this value
     // is the clip space position of the vertex when this structure is
@@ -26,8 +25,7 @@ typedef struct
     // and then passes the interpolated value to the fragment shader for each
     // fragment in the triangle.
     float4 color;
-
-} RasterizerData;
+};
 
 vertex RasterizerData
 vertexShader(uint vertexID [[vertex_id]],

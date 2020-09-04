@@ -246,7 +246,7 @@
 		3A35327F1E99974500C194AD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1100;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = Apple;
 				TargetAttributes = {
 					3A35328E1E99974500C194AD = {
@@ -266,10 +266,9 @@
 			};
 			buildConfigurationList = 3A3532821E99974500C194AD /* Build configuration list for PBXProject "HelloTriangle" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -413,6 +412,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -437,8 +437,9 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = YES;
+				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = MetalTexturedQuad;
+				PRODUCT_NAME = HelloTriangle;
 			};
 			name = Debug;
 		};
@@ -468,6 +469,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -486,7 +488,8 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = MetalTexturedQuad;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = HelloTriangle;
 			};
 			name = Release;
 		};
@@ -505,9 +508,10 @@
 					TARGET_IOS,
 				);
 				INFOPLIST_FILE = Application/iOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -528,8 +532,9 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = TARGET_IOS;
 				INFOPLIST_FILE = Application/iOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -556,12 +561,13 @@
 				INFOPLIST_FILE = Application/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 10.2;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
@@ -578,12 +584,13 @@
 				GCC_PREPROCESSOR_DEFINITIONS = TARGET_TVOS;
 				INFOPLIST_FILE = Application/tvOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.HelloTriangle${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 10.2;
+				TVOS_DEPLOYMENT_TARGET = 12.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -603,6 +610,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.$(PRODUCT_NAME)${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -621,6 +629,7 @@
 				INFOPLIST_FILE = Application/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.$(PRODUCT_NAME)${SAMPLE_CODE_DISAMBIGUATOR}";
 				PRODUCT_NAME = HelloTriangle;
 				PROVISIONING_PROFILE_SPECIFIER = "";

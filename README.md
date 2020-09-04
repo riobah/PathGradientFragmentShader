@@ -11,9 +11,7 @@ The sample supplies a position and color for each vertex, and the render pipelin
 
 ![Simple 2D Triangle Vertices](Documentation/2DTriangleVertices.png)
 
-- Note: The Xcode project contains schemes for running the sample on macOS, iOS, and tvOS.
-Metal isn't supported in the iOS or tvOS Simulator, so the iOS and tvOS schemes require a physical device to run the sample.
-The default scheme is macOS.
+The Xcode project contains schemes for running the sample on macOS, iOS, and tvOS.
 
 ## Understand the Metal Render Pipeline
 
@@ -83,7 +81,7 @@ The vertex stage generates data for a vertex, so it needs to provide a color and
 Declare a `RasterizerData` structure containing a position and a color value, again using SIMD types. 
 
 ``` metal
-typedef struct
+struct RasterizerData
 {
     // The [[position]] attribute of this member indicates that this value
     // is the clip space position of the vertex when this structure is
@@ -95,8 +93,7 @@ typedef struct
     // and then passes the interpolated value to the fragment shader for each
     // fragment in the triangle.
     float4 color;
-
-} RasterizerData;
+};
 ```
 
 The output position (described in detail below) must be defined as a `vector_float4`. The color is declared as it was in the input data structure.
