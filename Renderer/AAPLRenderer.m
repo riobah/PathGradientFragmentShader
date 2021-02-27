@@ -14,6 +14,26 @@ Implementation of a platform independent renderer class, which performs Metal se
 // uses these types as inputs to the shaders.
 #import "AAPLShaderTypes.h"
 
+
+#if defined(TARGET_IOS) || defined(TARGET_TVOS)
+#define PlatformColor UIColor
+vector_float4 components(UIColor *color) {
+    CGFloat r, g, b, a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return (vector_float4){r, g, b, a};
+}
+#else
+#define PlatformColor NSColor
+vector_float4 components(NSColor *color) {
+    float r = color.redComponent;
+    float g = color.greenComponent;
+    float b = color.blueComponent;
+    float a = color.alphaComponent;
+    return (vector_float4){r, g, b, a};
+}
+#endif
+
+
 // Main class performing the rendering
 @implementation AAPLRenderer
 {
@@ -27,6 +47,8 @@ Implementation of a platform independent renderer class, which performs Metal se
 
     // The current size of the view, used as an input to the vertex shader.
     vector_uint2 _viewportSize;
+
+    float _time;
 }
 
 - (nonnull instancetype)initWithMetalKitView:(nonnull MTKView *)mtkView
@@ -78,14 +100,49 @@ Implementation of a platform independent renderer class, which performs Metal se
 /// Called whenever the view needs to render a frame.
 - (void)drawInMTKView:(nonnull MTKView *)view
 {
-    static const AAPLVertex triangleVertices[] =
-    {
-        // 2D positions,    RGBA colors
-        { {  250,  -250 }, { 1, 0, 0, 1 } },
-        { { -250,  -250 }, { 0, 1, 0, 1 } },
-        { {    0,   250 }, { 0, 0, 1, 1 } },
+    static const float scaleFactor = 3.0;
+    static BONVertex pathVertices[] = {
+        {-3,  0},
+        {-1,  0},
+        { 0,  0.5},
+        { 1,  0},
+        { 0, -0.5},
+        {-1,  0},
+        {-1, -1},
+        { 0, -1.5},
+        { 1, -1},
+        { 1,  0},
+        { 3,  0},
     };
+    static int numberOfPathVertices = sizeof(pathVertices) / sizeof(pathVertices[0]);
+    static AAPLVertex vertices[100];
 
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        for (int i=0; i<numberOfPathVertices; i++) {
+            pathVertices[i].x /= scaleFactor;
+            pathVertices[i].y /= scaleFactor;
+        }
+        for (int i=0; i<numberOfPathVertices; i++) {
+            int numberOfGradients = 1;
+            float hue = numberOfGradients * (float)(i % (numberOfPathVertices/numberOfGradients)) / numberOfPathVertices;
+            PlatformColor *color = [PlatformColor colorWithHue:hue saturation:1 brightness:1 alpha:1];
+            vector_float4 comps = components(color);
+            
+            vertices[i].position = pathVertices[i];
+            vertices[i].color = (vector_float4){
+                comps.r,
+                comps.g,
+                comps.b,
+                comps.a
+            };
+        }
+    });
+
+    // time is 32 bits float. Metal does not support 64 bit double (NSTimeInterval)
+    // this is passed to be used as input for animations
+    _time = NSProcessInfo.processInfo.systemUptime;
+    
     // Create a new command buffer for each render pass to the current drawable.
     id<MTLCommandBuffer> commandBuffer = [_commandQueue commandBuffer];
     commandBuffer.label = @"MyCommand";
@@ -106,18 +163,22 @@ Implementation of a platform independent renderer class, which performs Metal se
         [renderEncoder setRenderPipelineState:_pipelineState];
 
         // Pass in the parameter data.
-        [renderEncoder setVertexBytes:triangleVertices
-                               length:sizeof(triangleVertices)
+        [renderEncoder setVertexBytes:vertices
+                               length:sizeof(vertices[0]) * numberOfPathVertices
                               atIndex:AAPLVertexInputIndexVertices];
         
         [renderEncoder setVertexBytes:&_viewportSize
                                length:sizeof(_viewportSize)
                               atIndex:AAPLVertexInputIndexViewportSize];
 
+        [renderEncoder setVertexBytes:&_time
+                               length:sizeof(_time)
+                              atIndex:AAPLVertexInputIndexTime];
+
         // Draw the triangle.
-        [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle
+        [renderEncoder drawPrimitives:MTLPrimitiveTypeLineStrip
                           vertexStart:0
-                          vertexCount:3];
+                          vertexCount:numberOfPathVertices];
 
         [renderEncoder endEncoding];
 

@@ -16,6 +16,7 @@ typedef enum AAPLVertexInputIndex
 {
     AAPLVertexInputIndexVertices     = 0,
     AAPLVertexInputIndexViewportSize = 1,
+    AAPLVertexInputIndexTime         = 2,
 } AAPLVertexInputIndex;
 
 //  This structure defines the layout of vertices sent to the vertex
@@ -27,5 +28,7 @@ typedef struct
     vector_float2 position;
     vector_float4 color;
 } AAPLVertex;
+
+typedef vector_float2 BONVertex;
 
 #endif /* AAPLShaderTypes_h */
