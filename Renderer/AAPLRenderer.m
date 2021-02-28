@@ -100,6 +100,17 @@ vector_float4 components(NSColor *color) {
 /// Called whenever the view needs to render a frame.
 - (void)drawInMTKView:(nonnull MTKView *)view
 {
+    static const AAPLVertex triangleVertices[] =
+    {
+        // 2D positions,    RGBA colors
+        { { -1,  -1 }, { 1, 1, 1, 1 } },
+        { { -1,   1 }, { 1, 1, 1, 1 } },
+        { {  1,   1 }, { 1, 1, 1, 1 } },
+        { {  1,   1 }, { 1, 1, 1, 1 } },
+        { {  1,  -1 }, { 1, 1, 1, 1 } },
+        { { -1,  -1 }, { 1, 1, 1, 1 } },
+    };
+    
     static const float scaleFactor = 3.0;
     static BONVertex pathVertices[] = {
         {-3,  0},
@@ -114,31 +125,9 @@ vector_float4 components(NSColor *color) {
         { 1,  0},
         { 3,  0},
     };
-    static int numberOfPathVertices = sizeof(pathVertices) / sizeof(pathVertices[0]);
-    static AAPLVertex vertices[100];
 
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        for (int i=0; i<numberOfPathVertices; i++) {
-            pathVertices[i].x /= scaleFactor;
-            pathVertices[i].y /= scaleFactor;
-        }
-        for (int i=0; i<numberOfPathVertices; i++) {
-            int numberOfGradients = 1;
-            float hue = numberOfGradients * (float)(i % (numberOfPathVertices/numberOfGradients)) / numberOfPathVertices;
-            PlatformColor *color = [PlatformColor colorWithHue:hue saturation:1 brightness:1 alpha:1];
-            vector_float4 comps = components(color);
-            
-            vertices[i].position = pathVertices[i];
-            vertices[i].color = (vector_float4){
-                comps.r,
-                comps.g,
-                comps.b,
-                comps.a
-            };
-        }
-    });
 
+    
     // time is 32 bits float. Metal does not support 64 bit double (NSTimeInterval)
     // this is passed to be used as input for animations
     _time = NSProcessInfo.processInfo.systemUptime;
@@ -153,8 +142,7 @@ vector_float4 components(NSColor *color) {
     if(renderPassDescriptor != nil)
     {
         // Create a render command encoder.
-        id<MTLRenderCommandEncoder> renderEncoder =
-        [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
+        id<MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
         renderEncoder.label = @"MyRenderEncoder";
 
         // Set the region of the drawable to draw into.
@@ -163,22 +151,36 @@ vector_float4 components(NSColor *color) {
         [renderEncoder setRenderPipelineState:_pipelineState];
 
         // Pass in the parameter data.
-        [renderEncoder setVertexBytes:vertices
-                               length:sizeof(vertices[0]) * numberOfPathVertices
+        [renderEncoder setVertexBytes:triangleVertices
+                               length:sizeof(triangleVertices)
                               atIndex:AAPLVertexInputIndexVertices];
-        
+
         [renderEncoder setVertexBytes:&_viewportSize
                                length:sizeof(_viewportSize)
                               atIndex:AAPLVertexInputIndexViewportSize];
+        
+        [renderEncoder setFragmentBytes:&_time
+                                 length:sizeof(_time)
+                                atIndex:AAPLFragmentInputIndexTime];
+        
+        [renderEncoder setFragmentBytes:&scaleFactor
+                                 length:sizeof(scaleFactor)
+                                atIndex:AAPLFragmentInputIndexScale];
+        
+        int nPoints = sizeof(pathVertices) / sizeof(pathVertices[0]);
+        [renderEncoder setFragmentBytes:&nPoints
+                                 length:sizeof(nPoints)
+                                atIndex:AAPLFragmentInputIndexNPoints];
+        
+        [renderEncoder setFragmentBytes:pathVertices
+                                 length:sizeof(pathVertices)
+                                atIndex:AAPLFragmentInputIndexPoints];
 
-        [renderEncoder setVertexBytes:&_time
-                               length:sizeof(_time)
-                              atIndex:AAPLVertexInputIndexTime];
 
         // Draw the triangle.
-        [renderEncoder drawPrimitives:MTLPrimitiveTypeLineStrip
+        [renderEncoder drawPrimitives:MTLPrimitiveTypeTriangle
                           vertexStart:0
-                          vertexCount:numberOfPathVertices];
+                          vertexCount:sizeof(triangleVertices)/sizeof(triangleVertices[0])];
 
         [renderEncoder endEncoding];
 

@@ -16,8 +16,15 @@ typedef enum AAPLVertexInputIndex
 {
     AAPLVertexInputIndexVertices     = 0,
     AAPLVertexInputIndexViewportSize = 1,
-    AAPLVertexInputIndexTime         = 2,
 } AAPLVertexInputIndex;
+
+typedef enum AAPLFragmentInputIndex
+{
+    AAPLFragmentInputIndexTime       = 0,
+    AAPLFragmentInputIndexScale,
+    AAPLFragmentInputIndexNPoints,
+    AAPLFragmentInputIndexPoints,
+} AAPLFragmentInputIndex;
 
 //  This structure defines the layout of vertices sent to the vertex
 //  shader. This header is shared between the .metal shader and C code, to guarantee that
