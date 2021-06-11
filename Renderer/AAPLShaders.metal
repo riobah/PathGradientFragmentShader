@@ -48,6 +48,7 @@ struct RasterizerData
     // returned from the vertex function.
     float4 position [[position]];
     float4 color;
+    vector_uint2 viewportSize;
 };
 
 vertex RasterizerData
@@ -59,6 +60,7 @@ vertexShader(uint vertexID [[vertex_id]],
 
     out.position = float4(vertices[vertexID].position.xy, 0, 1);
     out.color = vertices[vertexID].color;
+    out.viewportSize = *viewportSizePointer;
 
     return out;
 }
@@ -106,9 +108,10 @@ fragment float4 fragmentShader(RasterizerData in [[stage_in]],
                                constant vector_float2 *points [[buffer(AAPLFragmentInputIndexPoints)]],
                                constant int *n_points [[buffer(AAPLFragmentInputIndexNPoints)]],
                                constant float *_scale[[buffer(AAPLFragmentInputIndexScale)]],
-                               constant float *_time[[buffer(AAPLFragmentInputIndexTime)]],
-                               float2 uv[[point_coord]])
+                               constant float *_time[[buffer(AAPLFragmentInputIndexTime)]])
 {
+    float2 uv = (in.position.xy / float2(in.viewportSize.xy) * 2.0 - 1.0) * float2(1, -1);
+
     float time = *_time;
     float scale = *_scale;
 
